@@ -27,3 +27,8 @@ type
         route_type_id*:int
         # Настройки маршрута
         settings*:string
+
+    # Параметр измерения
+    DbMeasureParameter* = ref object of DbEntity
+        # Название параметра
+        name*:string
