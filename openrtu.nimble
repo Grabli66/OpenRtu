@@ -5,6 +5,7 @@ author        = "Grabli66"
 description   = "Open RTU"
 license       = "MIT"
 srcDir        = "src"
+binDir        = "bin"
 bin           = @["openrtu"]
 
 
