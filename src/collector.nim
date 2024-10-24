@@ -3,3 +3,10 @@
 # Загружает сценарии сбора из базы
 # Запускает сбор по сценарию сбора
 # Обрабатывает внешние запросы
+
+import database/database as db
+
+db.getAllDevices()
+
+proc start*() = 
+    discard

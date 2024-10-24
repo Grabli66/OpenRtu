@@ -12,3 +12,4 @@ bin           = @["openrtu"]
 # Dependencies
 
 requires "nim >= 2.2.0"
+requires "allographer"
