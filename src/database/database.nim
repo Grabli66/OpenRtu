@@ -111,3 +111,10 @@ proc getDeviceById*(id:int):Option[dbe.DbDevice] =
         .orm(dbe.DbDevice)
         .waitFor()
     return device
+
+# Удаляет устройство по идентификатору
+proc removeDeviceById*(id:int) =
+    rdb
+        .table(dbe.deviceTableName)
+        .delete(id)
+        .waitFor()
