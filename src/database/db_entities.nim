@@ -1,5 +1,12 @@
 # Сущности базы данных
 
+import strformat
+
+# Название таблицы с устройствами
+const deviceTableName* = "device"
+# Название таблицы с типами устройств
+const deviceTypeTableName* = "device_type"
+
 type 
     DbEntity* = ref object of RootObj
         # Идентификатор сущности
@@ -32,3 +39,6 @@ type
     DbMeasureParameter* = ref object of DbEntity
         # Название параметра
         name*:string
+
+proc `$`*(this:DbDevice) : string =
+    return &"id: {this.id} model_type_id: {this.model_type_id} settings: {this.settings}"

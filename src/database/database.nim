@@ -5,7 +5,9 @@ import allographer/connection as conn
 import allographer/query_builder
 import allographer/schema_builder
 import std/options
+import std/strutils
 import tables
+import db_entities as dbe
 
 import ./updates/update_v1 as up1
 
@@ -30,11 +32,11 @@ proc getInfoJson*() : Option[JsonNode] =
     return none(JsonNode)
 
 # Обновляет номер версии базы
-proc setDbVersion(version:int) =    
-    var info : JsonNode
+proc setDbVersion(version:int) =        
     var jinfo = getInfoJson()    
     
-    if jinfo.isSome:                
+    if jinfo.isSome:  
+        var info = jinfo.get()
         info["db_version"] = newJInt(version)
         var updateQuery = newJObject()
         updateQuery["info"] = jinfo.get()
@@ -45,7 +47,7 @@ proc setDbVersion(version:int) =
             .waitFor             
     else:
         var insertQuery = newJObject()
-        insertQuery["info"] = %*{"db_version": 1} 
+        insertQuery["info"] = %*{"db_version": version} 
         rdb
             .table("db_info")
             .insert(insertQuery)
@@ -78,6 +80,17 @@ proc init*() =
         updateProc(rdb)
         dbVersion += 1
         setDbVersion(dbVersion)
+
+# Добавляет устройство
+proc addDevice*(dev:DbDevice):DbDevice =
+    let id = rdb
+        .table(dbe.deviceTableName)
+        .insertId(%*{"model_type_id":dev.model_type_id,"settings":dev.settings})
+        .waitFor()
+    
+    result = dev
+    result.id = parseInt(id)
+
 
 # Возвращает все устройства
 proc getAllDevices*() =

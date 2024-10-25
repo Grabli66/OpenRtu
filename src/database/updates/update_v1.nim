@@ -1,10 +1,11 @@
 import allographer/connection as conn
 import allographer/schema_builder
+import ../db_entities as dbe
 
 # Обновление базы данных до версии 1
 proc updateV1*(ctx:SqliteConnections) =    
     ctx.create([
-        table("device", [
+        table(dbe.deviceTableName, [
             Column.increments("id"),  
             Column.integer("model_type_id"),
             Column.string("settings")
@@ -12,7 +13,7 @@ proc updateV1*(ctx:SqliteConnections) =
     ])
 
     ctx.create([
-        table("device_type", [
+        table(dbe.deviceTypeTableName, [
             Column.increments("id"),  
             Column.integer("model_type_id"),
             Column.string("name")
