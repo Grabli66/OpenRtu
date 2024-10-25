@@ -8,6 +8,8 @@ import collector
 proc main() {.async.} =
     db.init()
 
+    let device = db.getDeviceById(3)
+    echo device
     
     collector.start()
 

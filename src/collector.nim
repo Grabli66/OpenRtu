@@ -4,9 +4,7 @@
 # Запускает сбор по сценарию сбора
 # Обрабатывает внешние запросы
 
-import database/database as db
-
-db.getAllDevices()
+#import database/database as db
 
 proc start*() = 
     discard

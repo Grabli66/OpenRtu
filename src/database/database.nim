@@ -91,11 +91,23 @@ proc addDevice*(dev:DbDevice):DbDevice =
     result = dev
     result.id = parseInt(id)
 
-
 # Возвращает все устройства
-proc getAllDevices*() =
-    discard
+proc getAllDevices*():seq[dbe.DbDevice] =
+    let devices = rdb
+        .select("id", "model_type_id", "settings")
+        .table(dbe.deviceTableName)
+        .get()
+        .orm(dbe.DbDevice)
+        .waitFor()
+    return devices
 
 # Возвращает устройство по идентификатору
-proc getDeviceById*(id:int) =
-    discard
+proc getDeviceById*(id:int):Option[dbe.DbDevice] =
+    let device = rdb
+        .select("id", "model_type_id", "settings")
+        .table(dbe.deviceTableName)
+        .where("id","=",id)
+        .first()        
+        .orm(dbe.DbDevice)
+        .waitFor()
+    return device
