@@ -33,16 +33,20 @@ proc getInfoJson*() : Option[JsonNode] =
 proc setDbVersion(version:int) =
     var info : JsonNode
     var jinfo = getInfoJson()    
-
+    
     if jinfo.isSome:
         info = jinfo.get()
     else:
         info = %*{"db_version": 1}
 
     info["db_version"] = newJInt(version)
+
+    var updateQuery = newJObject()
+    updateQuery["info"] = info
+
     rdb
         .table("db_info")
-        .update(info)
+        .insert(updateQuery)
         .waitFor             
 
 # Инициализирует базу данных
@@ -71,7 +75,13 @@ proc init*() =
             dbVersion += 1
             setDbVersion(dbVersion)
     else:
-        setDbVersion(1)
+        const firstVersion = 1
+        setDbVersion(firstVersion)
+        let updateProc = updateMap.getOrDefault(firstVersion)
+        if updateProc == nil:
+            return
+        
+        updateProc(rdb)
 
 # Возвращает все устройства
 proc getAllDevices*() =
