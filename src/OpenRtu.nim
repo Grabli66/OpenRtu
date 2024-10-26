@@ -1,17 +1,14 @@
 # Точка входа
 
-import asyncdispatch
 import database/database as db
 import database/db_entities as dbe
-import collector
+import collector/collector
 
-proc main() {.async.} =
-    db.init()
-
-    let device = db.getDeviceById(3)
-    echo device
-    
+proc main() =
+    # Инициализирует базу данных
+    db.init()        
+    # Запускает автосбор
     collector.start()
 
 when isMainModule:
-    waitFor(main())
+    main()
