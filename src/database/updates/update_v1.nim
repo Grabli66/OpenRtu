@@ -14,7 +14,7 @@ proc updateV1*(ctx:SqliteConnections) =
 
     ctx.create([
         table(dbe.deviceTypeTableName, [
-            Column.increments("id"),  
+            Column.increments("id"),
             Column.integer("model_type_id"),
             Column.string("name")
         ])

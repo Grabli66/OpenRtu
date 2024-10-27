@@ -118,3 +118,23 @@ proc removeDeviceById*(id:int) =
         .table(dbe.deviceTableName)
         .delete(id)
         .waitFor()
+
+# Возвращает тип устройства по идентификатору модели
+proc getDeviceTypeByModelId*(id:int) : DbDeviceType =
+    discard
+
+# Добавляет маршрут для устройства
+proc addRouteByDeviceId*(deviceId:int, route:DbRoute) : DbRoute =
+    discard
+
+# Возвращает маршрут по идентификатору устройства
+proc getRouteByDeviceId*(id:int) : DbRoute =
+    discard
+
+# Удаляет маршрут по идентификатору устройства
+proc removeRouteByDeviceId*(id:int) =
+    discard
+
+# Возвращает сценарии сбора
+proc getCollectScenarios*() : seq[DbCollectScenario] =
+    discard

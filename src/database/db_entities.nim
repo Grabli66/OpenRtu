@@ -35,6 +35,22 @@ type
         # Настройки маршрута
         settings*:string
 
+    # Сценарий сбора
+    DbCollectScenario* = ref object of DbEntity
+        # Тип расписания
+        scheduleType*:int
+        # Настройки расписания
+        scheduleSettings*:string
+        # Ссылка на список устройств сценариев сбора
+        deviceListRef*:int
+
+    # Элемент списка устройств сценария сбора
+    DbCollectScenarioDeviceListItem* = ref object of DbEntity
+        # Ссылка на список устройств сценариев сбора
+        deviceListRef*:int
+        # Идентификатор устройства
+        deviceId*:int
+
     # Параметр измерения
     DbMeasureParameter* = ref object of DbEntity
         # Название параметра
