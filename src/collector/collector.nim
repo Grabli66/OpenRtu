@@ -1,9 +1,12 @@
 # Модуль сборщика данных
+# Принцип работы:
+# 
 
 import asyncdispatch
 import ../database/database as db
 import ../database/db_entities as dbe
-
+import collector_types as cot
+import ../common/schedule
 
 type
     # Устройство с полной информацией для сбора
@@ -11,6 +14,15 @@ type
         device:dbe.DbDevice
         deviceType:dbe.DbDeviceType
         route:dbe.DbRoute
+
+    # Сценарий сбора данных
+    CollectorScenario = ref object
+        # Идентификатор сценария сбора
+        id : int
+        # Расписание сценария
+        schedule : BaseSchedule
+        # Устройства по которым нужно собирать данные
+        devices : DeviceWithFullInfo
 
 # Возвращает устройства с заполненной информацией
 proc getDevicesWithFullInfo() : seq[DeviceWithFullInfo] =
@@ -29,20 +41,50 @@ proc getDevicesWithFullInfo() : seq[DeviceWithFullInfo] =
     
     return deviceSeq
 
-# Запускает обработку сценариев сбора
-proc startExecuteScenarios(scenarios:seq[DbCollectScenario], devices:seq[DeviceWithFullInfo]) =
+# Создаёт задачу сбора для прикладного драйвера
+proc createCollectorTask() : CollectorTask =
     discard
 
-# Запускает работу автосбора
-proc start*() =
+# Запускает исполнение задания сбора
+proc startCollectorTask(task : CollectorTask) =
+    discard
+
+# Запускает обработку сценариев сбора
+proc startExecuteScenarios(scenarios:seq[CollectorScenario]) =
+    for scenario in scenarios:
+        # Проверяет нужно ли запускать сценарий
+        
+
+        # Создаёт задание сбора
+        let collectorTask = createCollectorTask()
+        # Запускает задание
+        startCollectorTask(collectorTask)
+
+# Загружает сценарии и запускает работу автосбора
+proc loadAndStart*() =
     # Загружает из базы: устройства, типы устройств, маршруты    
     let devices = getDevicesWithFullInfo()
 
     # Загружает сценарии сбора из базы
-    let collectScenarios = db.getCollectScenarios()
+    let dbCollectScenarios = db.getCollectScenarios()
+    
+    # Создаёт сценарии сбора
+    #let collectScenarios = createCollectScenarios(dbCollectScenarios, devices)
 
     # Запускает сбор по сценарию сбора
-    startExecuteScenarios(collectScenarios, devices)
+    #startExecuteScenarios(collectScenarios)
+
+# Добавляет сценарий сбора
+proc addCollectScenario*() =
+    discard
+
+# Останавливает работу сценария
+proc stopCollectScenario*() =
+    discard
+
+# Удаляет сценарий сбора
+proc removeCollectScenario*() = 
+    discard
 
 # Исполняет внешнее задание
 proc executeExternalTask*() : Future[void] =
