@@ -1,6 +1,6 @@
 # Модуль сборщика данных
-# Принцип работы:
-# 
+# Позволяет управлять сценариями сбора: добавлять, удалять, запускать, останавливать
+# Позволяет вручную выполнять задания: запускать, останавливать
 
 import asyncdispatch
 import ../database/database as db
@@ -53,12 +53,12 @@ proc startCollectorTask(task : CollectorTask) =
 proc startExecuteScenarios(scenarios:seq[CollectorScenario]) =
     for scenario in scenarios:
         # Проверяет нужно ли запускать сценарий
-        
+        discard
 
         # Создаёт задание сбора
-        let collectorTask = createCollectorTask()
+        #let collectorTask = createCollectorTask()
         # Запускает задание
-        startCollectorTask(collectorTask)
+        #startCollectorTask(collectorTask)
 
 # Загружает сценарии и запускает работу автосбора
 proc loadAndStart*() =
