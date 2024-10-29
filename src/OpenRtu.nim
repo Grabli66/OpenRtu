@@ -9,9 +9,16 @@
 import database/database as db
 import collector/collector
 
+# Загружает сценарии сбора и устройства из базы
+proc loadScenarios() =
+    discard
+
 proc main() =
     # Инициализирует базу данных
-    db.init()        
+    db.init()
+    # Загружает сценарии сбора    
+    let scenarios = loadScenarios()
+
     # Запускает автосбор
     collector.loadAndStart()
 
