@@ -1,4 +1,5 @@
 # Общие типы относящиеся к автосбору
+# Для передачи между модулями
 
 type
     # Установленный канал до устройства
@@ -9,10 +10,9 @@ type
     AppLayerDriver* = ref object
 
     # Задание автосбора использующееся в прикладном драйвере сбора
-    AppLayerCollectorTask* = ref object
-        # Идентификатор задания
-        id*:int
-        # Настройки задания
-        settings:string
-        # Установленный канал до устройства
-        io*:DeviceIOChannel
+    # Базовое определение, реализуется в автосборе
+    BaseCollectorTask* = ref object of RootObj       
+
+# Возвращает идентификатор задания
+method id*(this:BaseCollectorTask) : int {.base.} =
+    raise newException(ValueError, "Not implemented")
