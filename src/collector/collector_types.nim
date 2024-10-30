@@ -1,6 +1,8 @@
 # Общие типы относящиеся к автосбору
 # Для передачи между модулями
 
+import ../common/interval
+
 type
     # Установленный канал до устройства
     # Для передачи данных в устройство
@@ -9,10 +11,23 @@ type
     # Прикладной драйвер
     AppLayerDriver* = ref object
 
-    # Задание автосбора использующееся в прикладном драйвере сбора
-    # Базовое определение, реализуется в автосборе
-    BaseCollectorTask* = ref object of RootObj       
+    # Типы задания собирателя
+    TaskKind* {.pure.} = enum
+        # Запрос измеренных данных устройства
+        DataRequest = 0, 
+        # Запрос событий устройства
+        EventRequest = 1
 
-# Возвращает идентификатор задания
-method id*(this:BaseCollectorTask) : int {.base.} =
-    raise newException(ValueError, "Not implemented")
+    # Интерфейс задания собирателя
+    ICollectorTask* = ref object of RootObj      
+        # Возвращает идентификатор задания
+        getId*: proc():int  
+        case kind : TaskKind
+        of DataRequest:
+            # Параметр измерения
+            parameter:int
+            # Запрашиваемый интервал данных
+            dataInterval:Interval
+        of EventRequest:
+            # Запрашиваемый интервал событий
+            eventInterval:Interval

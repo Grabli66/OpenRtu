@@ -29,7 +29,7 @@ type
         # Настройки устройства
         settings:JsonNode    
 
-    CollectorTask* = ref object of cot.BaseCollectorTask
+    CollectorTask* = ref object of cot.ICollectorTask
         # Идентифкатор задания
         id:int
 
@@ -44,12 +44,11 @@ template nextTaskId(): int =
     collectorTaskId
 
 # Создаёт новую задачу сборщика данных
-proc newCollectorTask*() : cot.BaseCollectorTask = 
-    return CollectorTask(id: nextTaskId())
-
-# Возвращает идентификатор задания
-method id*(this:CollectorTask) : int =
-    return this.id    
+proc newCollectorTask*() : cot.ICollectorTask = 
+    var res = CollectorTask(id: nextTaskId())
+    res.getId = proc() : int =
+        let ctx = res
+        return ctx.id
 
 # Создаёт новое устройство сбора
 proc newCollectorDevice*(id:int, deviceType:DeviceModelType, settings:JsonNode) : CollectorDevice =
@@ -110,5 +109,5 @@ proc removeDeviceById*(this:CollectorScenario, id:int) =
 
 # Запускает внешнее задания
 # Возвращает результат выолнения задания
-proc executeExternalTask*(task:cot.BaseCollectorTask) : Future[void] =
+proc executeExternalTask*(task:cot.ICollectorTask) : Future[void] =
     discard
