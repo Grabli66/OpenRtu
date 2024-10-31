@@ -19,9 +19,9 @@ type
         EventRequest = 1
 
     # Интерфейс задания собирателя
-    ICollectorTask* = ref object of RootObj      
-        # Возвращает идентификатор задания
-        getId*: proc():int  
+    CollectorTask* = ref object of RootObj      
+        # Идентификатор задания
+        id: int
         case kind : TaskKind
         of DataRequest:
             # Параметр измерения
@@ -31,3 +31,24 @@ type
         of EventRequest:
             # Запрашиваемый интервал событий
             eventInterval:Interval
+
+# Создаёт задачу собирателя
+proc newDataRequestCollectorTask*(
+        id:int,
+        parameter:int,
+        dataInterval:Interval
+        ) : CollectorTask =
+    return CollectorTask(
+        id:id,
+        kind:TaskKind.DataRequest,
+        parameter:parameter,
+        dataInterval:dataInterval
+    )
+
+# Возвращает идентификатор задания
+proc id*(this:CollectorTask) : int =
+    return this.id
+
+# Возвращает тип задания
+proc kind*(this:CollectorTask) : TaskKind =
+    return this.kind

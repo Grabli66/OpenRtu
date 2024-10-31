@@ -13,3 +13,4 @@ bin           = @["openrtu"]
 
 requires "nim >= 2.2.0"
 requires "allographer"
+requires "print"

@@ -1,5 +1,5 @@
 type
     # Модели устройств
-    DeviceModelType* = enum
+    DeviceModelType* {.pure.} = enum
         # Универсальный счетчик с протоколом СПОДЭС
-        UniversalSpodes = 1
+        UniversalSpodes = 0

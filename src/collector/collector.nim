@@ -29,26 +29,16 @@ type
         # Настройки устройства
         settings:JsonNode    
 
-    CollectorTask* = ref object of cot.ICollectorTask
-        # Идентифкатор задания
-        id:int
-
 # Сценарии сбора
 var scenarios = newTable[int, CollectorScenario]()
+
 # Идентификатор задания
 var collectorTaskId = 0
 
 # Возвращает следующий идентификатор задания собирателя
-template nextTaskId(): int =
+template nextTaskId*(): int =
     collectorTaskId += 1
     collectorTaskId
-
-# Создаёт новую задачу сборщика данных
-proc newCollectorTask*() : cot.ICollectorTask = 
-    var res = CollectorTask(id: nextTaskId())
-    res.getId = proc() : int =
-        let ctx = res
-        return ctx.id
 
 # Создаёт новое устройство сбора
 proc newCollectorDevice*(id:int, deviceType:DeviceModelType, settings:JsonNode) : CollectorDevice =
@@ -58,8 +48,9 @@ proc newCollectorDevice*(id:int, deviceType:DeviceModelType, settings:JsonNode) 
         settings: settings
     )
 
-# Создаёт сценарий сбора и сохраняет его
-proc createCollectorScenario*(
+# Создаёт и добавляет сценарий сбора в словарь сценариев
+# Возвращает созданный сценарий
+proc addCollectorScenario*(
             # Идентификатор сценария
             id:int,
             # Расписание сценария
@@ -109,5 +100,5 @@ proc removeDeviceById*(this:CollectorScenario, id:int) =
 
 # Запускает внешнее задания
 # Возвращает результат выолнения задания
-proc executeExternalTask*(task:cot.ICollectorTask) : Future[void] =
+proc executeExternalTask*(task:cot.CollectorTask) : Future[void] =
     discard

@@ -92,7 +92,7 @@ proc addDevice*(dev:DbDevice):DbDevice =
     result.id = parseInt(id)
 
 # Возвращает все устройства
-proc getAllDevices*():seq[dbe.DbDevice] =
+proc getDevices*():seq[dbe.DbDevice] =
     let devices = rdb
         .select("id", "model_type_id", "settings")
         .table(dbe.deviceTableName)
@@ -135,6 +135,6 @@ proc getRouteByDeviceId*(id:int) : DbRoute =
 proc removeRouteByDeviceId*(id:int) =
     discard
 
-# Возвращает сценарии сбора
-proc getCollectScenarios*() : seq[DbCollectScenario] =
+# Возвращает все сценарии сбора
+proc getCollectorScenarios*() : seq[DbCollectScenario] =
     discard
