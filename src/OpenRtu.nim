@@ -9,7 +9,8 @@
 import print
 
 import json
-import database/database as db
+import database/idatabase as dbi
+import database/database_factory as dbf
 import database/db_entities as dbe
 import collector/collector as col
 import common/ids/device_model_types as dmt
@@ -24,43 +25,45 @@ type
 
 # Загружает сценарии сбора и устройства из базы
 # Возвращает сценарии сбора
-proc loadScenarios() : seq[col.CollectorScenario] =
-    # Загружает устройства
-    let dbDevices = db.getDevices()
-    var deviceSeq = newSeq[DeviceWithFullInfo](dbDevices.len)
-    for dbDevice in dbDevices:
-        let route = db.getRouteByDeviceId(dbDevice.id)
-        let deviceType = db.getDeviceTypeByModelId(dbDevice.model_type_id)
-        let devFull = DeviceWithFullInfo(
-            device:dbDevice, 
-            deviceType:deviceType,
-            route:route
-        )
-
-        deviceSeq.add(devFull)    
-    
-    # Загружает сценарии сбора
-    let dbScenarios = db.getCollectorScenarios()
+proc loadScenarios(db:IDatabase) : seq[col.CollectorScenario] =    
     var scenarios = newSeq[col.CollectorScenario]()
-    for dbScenario in dbScenarios:
-        let settings = json.newJObject()
-        var devices = newSeq[col.CollectorDevice]()        
-        let device = col.newCollectorDevice(
-            1, dmt.DeviceModelType.UniversalSpodes, settings
-        )
-        devices.add(device)        
-        scenarios.add(col.addCollectorScenario(
-                dbScenario.id, BaseSchedule(), devices
-            )
-        )
+    
+    # Загружает устройства
+    # let dbDevices = db.getDevices()
+    # var deviceSeq = newSeq[DeviceWithFullInfo](dbDevices.len)
+    # for dbDevice in dbDevices:
+    #     let route = db.getRouteByDeviceId(dbDevice.id)
+    #     let deviceType = db.getDeviceTypeByModelId(dbDevice.model_type_id)
+    #     let devFull = DeviceWithFullInfo(
+    #         device:dbDevice, 
+    #         deviceType:deviceType,
+    #         route:route
+    #     )
+
+    #     deviceSeq.add(devFull)    
+    
+    # # Загружает сценарии сбора    
+    # let dbScenarios = db.getCollectorScenarios()
+    # var scenarios = newSeq[col.CollectorScenario]()
+    # for dbScenario in dbScenarios:
+    #     let settings = json.newJObject()
+    #     var devices = newSeq[col.CollectorDevice]()        
+    #     let device = col.newCollectorDevice(
+    #         1, dmt.DeviceModelType.UniversalSpodes, settings
+    #     )
+    #     devices.add(device)        
+    #     scenarios.add(col.addCollectorScenario(
+    #             dbScenario.id, BaseSchedule(), devices
+    #         )
+    #     )
     
     return scenarios
 
 proc main() =
-    # Инициализирует базу данных
-    db.init()
+    # Инициализирует базу данных    
+    let db = dbf.get()
     # Загружает сценарии сбора    
-    let scenarios = loadScenarios()
+    let scenarios = loadScenarios(db)
     #for scenario in scenarios:
     #    scenario.start()
 

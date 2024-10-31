@@ -36,7 +36,7 @@ type
         settings*:string
 
     # Сценарий сбора
-    DbCollectScenario* = ref object of DbEntity
+    DbCollectorScenario* = ref object of DbEntity
         # Тип расписания
         scheduleType*:int
         # Настройки расписания
@@ -45,7 +45,7 @@ type
         deviceListRef*:int
 
     # Элемент списка устройств сценария сбора
-    DbCollectScenarioDeviceListItem* = ref object of DbEntity
+    DbCollectorScenarioDeviceListItem* = ref object of DbEntity
         # Ссылка на список устройств сценариев сбора
         deviceListRef*:int
         # Идентификатор устройства
