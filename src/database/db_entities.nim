@@ -13,25 +13,25 @@ type
         id*:int
 
     # Модель прибора учета
-    DbDevice* = ref object of DbEntity   
+    DbDevice* = ref object of DbEntity
         # Идентификатор модели
-        model_type_id*:int
+        modelTypeId*:int
         # Специфические настройки модели в формате JSON
         settings*:string
 
     # Тип прибора учета
     DbDeviceType* = ref object of DbEntity
         # Идентификатор модели
-        model_type_id*:int
+        modelTypeId*:int
         # Название модели
         name*:string
 
     # Маршрут до устройства
     DbRoute* = ref object of DbEntity
         # Идентификатор устройства к которому относится маршрут
-        device_id*:int
+        deviceId*:int
         # Тип маршрута устройства
-        route_type_id*:int
+        routeTypeId*:int
         # Настройки маршрута
         settings*:string
 
@@ -44,16 +44,11 @@ type
         # Ссылка на список устройств сценариев сбора
         deviceListRef*:int
 
-    # Элемент списка устройств сценария сбора
-    DbCollectorScenarioDeviceListItem* = ref object of DbEntity
-        # Ссылка на список устройств сценариев сбора
-        deviceListRef*:int
-        # Идентификатор устройства
-        deviceId*:int
-
     # Параметр измерения
     DbMeasureParameter* = ref object of DbEntity
-        # Название параметра
+        # Идентификатор параметра
+        prameterId:int
+        # Название параметра        
         name*:string
 
 proc `$`*(this:DbDevice) : string =

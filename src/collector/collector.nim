@@ -8,7 +8,7 @@ import tables
 
 import collector_types as cot
 import ../common/schedule
-import ../common/ids/device_model_types
+import ../database/type_ids
 
 type
     # Сценарий сбора

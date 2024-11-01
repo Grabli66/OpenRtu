@@ -1,4 +1,4 @@
-type 
+type
     # Базовое расписание запуска
     BaseSchedule* = object of RootObj
 
