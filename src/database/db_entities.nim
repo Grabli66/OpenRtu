@@ -1,55 +1,24 @@
-# Сущности базы данных
+import json
+import ./type_ids
 
-import strformat
-
-# Название таблицы с устройствами
-const deviceTableName* = "device"
-# Название таблицы с типами устройств
-const deviceTypeTableName* = "device_type"
-
-type 
-    DbEntity* = ref object of RootObj
-        # Идентификатор сущности
+type
+    # Маршрут для чтения
+    DbRouteRead* = ref object
         id*:int
+        routeType*:RouteType
+        routeSettings*:JsonNode
 
-    # Модель прибора учета
-    DbDevice* = ref object of DbEntity
-        # Идентификатор модели
-        modelTypeId*:int
-        # Специфические настройки модели в формате JSON
-        settings*:string
+    # Устройство для чтения
+    DbDeviceRead* = ref object
+        id*:int
+        devceType*:DeviceModelType
+        deviceSettings*:JsonNode
+        routes*:seq[DbRouteRead]
 
-    # Тип прибора учета
-    DbDeviceType* = ref object of DbEntity
-        # Идентификатор модели
-        modelTypeId*:int
-        # Название модели
+    # Сущность сценария сбора для чтения
+    DbCollectorScenarioRead* = ref object
+        id*:int
         name*:string
-
-    # Маршрут до устройства
-    DbRoute* = ref object of DbEntity
-        # Идентификатор устройства к которому относится маршрут
-        deviceId*:int
-        # Тип маршрута устройства
-        routeTypeId*:int
-        # Настройки маршрута
-        settings*:string
-
-    # Сценарий сбора
-    DbCollectorScenario* = ref object of DbEntity
-        # Тип расписания
-        scheduleType*:int
-        # Настройки расписания
-        scheduleSettings*:string
-        # Ссылка на список устройств сценариев сбора
-        deviceListRef*:int
-
-    # Параметр измерения
-    DbMeasureParameter* = ref object of DbEntity
-        # Идентификатор параметра
-        prameterId:int
-        # Название параметра        
-        name*:string
-
-proc `$`*(this:DbDevice) : string =
-    return &"id: {this.id} model_type_id: {this.model_type_id} settings: {this.settings}"
+        scheduleType*:ScheduleType
+        scheduleSettings:JsonNode
+        devices*:seq[DbDeviceRead]
