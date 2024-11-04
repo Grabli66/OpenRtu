@@ -1,6 +1,8 @@
 # Общие типы относящиеся к автосбору
 # Для передачи между модулями
 
+import json
+import ../database/type_ids as tid
 import ../common/interval
 
 type
@@ -18,6 +20,15 @@ type
         # Запрос событий устройства
         EventRequest = 1
 
+    # Данные по устройству сбора
+    CollectorDevice* = ref object
+        # Идентификатор устройства
+        id:int
+        # Идентификатор устройства
+        deviceType:tid.DeviceModelType
+        # Настройки устройства
+        settings:JsonNode  
+
     # Интерфейс задания собирателя
     CollectorTask* = ref object of RootObj      
         # Идентификатор задания
@@ -32,7 +43,7 @@ type
             # Запрашиваемый интервал событий
             eventInterval:Interval
 
-# Создаёт задачу собирателя
+# Создаёт задачу собирателя для сбора данных измерения
 proc newDataRequestCollectorTask*(
         id:int,
         parameter:int,
@@ -46,9 +57,17 @@ proc newDataRequestCollectorTask*(
     )
 
 # Возвращает идентификатор задания
-proc id*(this:CollectorTask) : int =
-    return this.id
+template id*(this:CollectorTask) : int =
+    this.id
 
 # Возвращает тип задания
-proc kind*(this:CollectorTask) : TaskKind =
-    return this.kind
+template kind*(this:CollectorTask) : TaskKind =
+    this.kind
+
+# Создаёт новое устройство сбора
+proc newCollectorDevice*(id:int, deviceType:DeviceModelType, settings:JsonNode) : CollectorDevice =
+    return CollectorDevice(
+        id: id,
+        deviceType: deviceType,
+        settings: settings
+    )

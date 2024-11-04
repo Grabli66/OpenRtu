@@ -1,3 +1,4 @@
+import json
 import options
 import idatabase
 import ./type_ids as tid
@@ -7,7 +8,48 @@ import ./db_entities as dbe
 proc getCollectorScenarios():seq[dbe.DbCollectorScenarioRead] =
     return @[
         dbe.DbCollectorScenarioRead(
-            scheduleType:tid.ScheduleType.Periodic
+            id:1,
+            name:"Сбор энергии",
+            scheduleType:tid.ScheduleType.Periodic,
+            scheduleSettings: %* { "discet": { "type":4, "value": 1  } },
+            devices: @[
+                dbe.DbDeviceRead(
+                    id: 1,
+                    devceType:tid.DeviceModelType.UniversalSpodes,
+                    deviceSettings: %* { "address": 45 },
+                    routes: @[
+                        dbe.DbRouteRead(
+                            id:1,
+                            routeType:tid.RouteType.TcpClient,
+                            routeSettings: %* { "host":"localhost", "port":26701 }
+                        )
+                    ]
+                ),
+                dbe.DbDeviceRead(
+                    id: 2,
+                    devceType:tid.DeviceModelType.UniversalSpodes,
+                    deviceSettings: %* { "address": 22 },
+                    routes: @[
+                        dbe.DbRouteRead(
+                            id:2,
+                            routeType:tid.RouteType.TcpClient,
+                            routeSettings: %* { "host":"localhost", "port":26701 }
+                        )
+                    ]
+                ),
+                dbe.DbDeviceRead(
+                    id: 3,
+                    devceType:tid.DeviceModelType.UniversalSpodes,
+                    deviceSettings: %* { "address": 14 },
+                    routes: @[
+                        dbe.DbRouteRead(
+                            id:3,
+                            routeType:tid.RouteType.TcpClient,
+                            routeSettings: %* { "host":"localhost", "port":26701 }
+                        )
+                    ]
+                )
+            ]
         )
     ]
 

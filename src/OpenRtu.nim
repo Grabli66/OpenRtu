@@ -19,24 +19,15 @@ import database/type_ids
 import collector/collector as col
 import common/schedule
 
-# Загружает сценарии сбора и устройства из базы
-# Возвращает сценарии сбора
-proc loadScenarios(db:IDatabase) : seq[col.CollectorScenario] =        
-    # Загружает сценарии сбора    
-    let dbScenarios = db.getCollectorScenarios()
-    var scenarios = newSeq[col.CollectorScenario]()
-    
-    return scenarios
-
 proc main() =
     # Инициализирует базу данных    
     let db = dbf.get()
     # Загружает сценарии сбора    
-    let scenarios = loadScenarios(db)
-    #for scenario in scenarios:
-    #    scenario.start()
+    let dbScenarios = db.getCollectorScenarios()
+    var scenarios = newSeq[col.CollectorScenario]()
+    for dbScenario in dbScenarios:
+        discard
 
-    print scenarios
     # Запускает выполнение сценариев
 
 

@@ -20,5 +20,5 @@ type
         id*:int
         name*:string
         scheduleType*:ScheduleType
-        scheduleSettings:JsonNode
+        scheduleSettings*:JsonNode
         devices*:seq[DbDeviceRead]

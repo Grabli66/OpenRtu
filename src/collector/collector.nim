@@ -3,12 +3,10 @@
 # Позволяет вручную выполнять задания: запускать, останавливать
 
 import asyncdispatch
-import json
 import tables
 
 import collector_types as cot
 import ../common/schedule
-import ../database/type_ids
 
 type
     # Сценарий сбора
@@ -18,16 +16,7 @@ type
         # Расписание сценария
         schedule:BaseSchedule
         # Устройства сбора
-        devices:seq[CollectorDevice]
-
-    # Данные по устройству сбора
-    CollectorDevice* = ref object
-        # Идентификатор устройства
-        id:int
-        # Идентификатор устройства
-        deviceType:DeviceModelType
-        # Настройки устройства
-        settings:JsonNode    
+        devices:seq[CollectorDevice]  
 
 # Сценарии сбора
 var scenarios = newTable[int, CollectorScenario]()
@@ -40,14 +29,6 @@ template nextTaskId*(): int =
     collectorTaskId += 1
     collectorTaskId
 
-# Создаёт новое устройство сбора
-proc newCollectorDevice*(id:int, deviceType:DeviceModelType, settings:JsonNode) : CollectorDevice =
-    return CollectorDevice(
-        id: id,
-        deviceType: deviceType,
-        settings: settings
-    )
-
 # Создаёт и добавляет сценарий сбора в словарь сценариев
 # Возвращает созданный сценарий
 proc addCollectorScenario*(
@@ -56,7 +37,7 @@ proc addCollectorScenario*(
             # Расписание сценария
             schedule:BaseSchedule,
             # Опрашиваемые устройства 
-            devices:seq[CollectorDevice]) : CollectorScenario =    
+            devices:seq[cot.CollectorDevice]) : CollectorScenario =    
     let scenario = CollectorScenario(id:id)    
     scenarios[scenario.id] = scenario
     return scenario
