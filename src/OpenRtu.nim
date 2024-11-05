@@ -6,33 +6,39 @@
 # Запускает webapi для веб интерфейса
 # Отслеживает изменения: web, серзвера запросов и вносит изменения в базу и управляет сбором
 
-import print
 
-import options
-import json
-import tables
+import sequtils
+
+import print
 
 import database/idatabase as dbi
 import database/database_factory as dbf
 import database/db_entities as dbe
-import database/type_ids
 import collector/collector as col
-import common/schedule
+import collector/collector_types as cot
+import common/daytime as dyt
+import common/discret as dis
+import common/schedule as sch
 
 proc main() =
     # Инициализирует базу данных    
     let db = dbf.get()
     # Загружает сценарии сбора    
-    let dbScenarios = db.getCollectorScenarios()
-    var scenarios = newSeq[col.CollectorScenario]()
-    for dbScenario in dbScenarios:
-        discard
-        # col.addCollectorScenario(
-        #     dbScenario.id,
-            
-        # )
-
-    # Запускает выполнение сценариев
+    let dbScenarios = db.getCollectorScenarios()    
+    for dbScenario in dbScenarios:               
+        let scenario = col.addCollectorScenario(
+            dbScenario.id,
+            sch.newPeriodicSchedule(
+                dis.newHourDiscret(),
+                dyt.newZeroDayTime()
+            ),
+            dbScenario.devices.mapIt(cot.newCollectorDevice(
+                it.id,
+                it.devceType,
+                it.deviceSettings
+            ))
+        )
+        scenario.start()
 
 
 when isMainModule:

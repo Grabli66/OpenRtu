@@ -20,6 +20,13 @@ type
         # Запрос событий устройства
         EventRequest = 1
 
+    # Маршрут устройства
+    CollectorDeviceRoute* = ref object
+        # Тип маршрута
+        routeType:int
+        # Настройки маршрута
+        routeSettings:JsonNode
+
     # Данные по устройству сбора
     CollectorDevice* = ref object
         # Идентификатор устройства
@@ -27,7 +34,8 @@ type
         # Идентификатор устройства
         deviceType:tid.DeviceModelType
         # Настройки устройства
-        settings:JsonNode  
+        settings:JsonNode
+        routes:seq[CollectorDeviceRoute]
 
     # Интерфейс задания собирателя
     CollectorTask* = ref object of RootObj      

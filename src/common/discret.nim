@@ -14,3 +14,17 @@ type
         discretType*:DiscretType
         # Значение дискретности
         discretValue*:int
+
+# Конструктор Discret
+proc newDiscret*(discretType:DiscretType,  discretValue:int) : Discret =
+    return Discret(
+        discretType:discretType,
+        discretValue:discretValue
+    )
+
+# Создаёт дискретность один час
+proc newHourDiscret*() : Discret =
+    return Discret(
+        discretType:DiscretType.Hour,
+        discretValue:1
+    )   

@@ -5,6 +5,8 @@
 import asyncdispatch
 import tables
 
+import print
+
 import collector_types as cot
 import ../common/schedule
 
@@ -38,7 +40,11 @@ proc addCollectorScenario*(
             schedule:BaseSchedule,
             # Опрашиваемые устройства 
             devices:seq[cot.CollectorDevice]) : CollectorScenario =    
-    let scenario = CollectorScenario(id:id)    
+    let scenario = CollectorScenario(
+        id:id,
+        schedule:schedule,
+        devices:devices
+    )    
     scenarios[scenario.id] = scenario
     return scenario
 
