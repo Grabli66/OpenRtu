@@ -27,6 +27,10 @@ proc main() =
     var scenarios = newSeq[col.CollectorScenario]()
     for dbScenario in dbScenarios:
         discard
+        # col.addCollectorScenario(
+        #     dbScenario.id,
+            
+        # )
 
     # Запускает выполнение сценариев
 
