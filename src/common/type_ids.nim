@@ -13,6 +13,11 @@ type
         # TCP клиент
         TcpClient = 1
 
+    # Типы протокола
+    ProtocolType* {.pure.} = enum
+        # Протокол СПОДЭС
+        Spodes = 0
+
     # Типы расписания
     ScheduleType* {.pure.} = enum
         # Периодически запускаемое расписание

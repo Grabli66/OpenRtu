@@ -8,12 +8,14 @@ import ../common/type_ids as tid
 import ../common/interval
 
 type
-    # Установленный канал до устройства
-    # Для передачи данных в устройство
-    DeviceIOChannel* = ref object       
+    # Интерфейс транспортного драйвера
+    ITransportDriver* = ref object       
 
-    # Прикладной драйвер
-    AppLayerDriver* = ref object
+    # Интерфейс драйвера протокола
+    IProtocolDriver* = ref object
+
+    # Интерфейс прикладного драйвера
+    IAppLayerDriver* = ref object
 
     # Типы задания собирателя
     TaskKind* {.pure.} = enum
