@@ -15,4 +15,5 @@ type
 
     # Типы расписания
     ScheduleType* {.pure.} = enum
+        # Периодически запускаемое расписание
         Periodic = 0

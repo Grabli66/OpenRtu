@@ -2,7 +2,9 @@
 # Для передачи между модулями
 
 import json
-import ../database/type_ids as tid
+import std/hashes
+
+import ../common/type_ids as tid
 import ../common/interval
 
 type
@@ -35,6 +37,7 @@ type
         deviceType:tid.DeviceModelType
         # Настройки устройства
         settings:JsonNode
+        # Маршруты устройства
         routes:seq[CollectorDeviceRoute]
 
     # Интерфейс задания собирателя
@@ -79,3 +82,11 @@ proc newCollectorDevice*(id:int, deviceType:DeviceModelType, settings:JsonNode) 
         deviceType: deviceType,
         settings: settings
     )
+
+# Считает хэш для CollectorDeviceRoute
+proc hash*(this:CollectorDeviceRoute):Hash =
+    return 1
+
+# Сравнивает два маршрута
+proc `==`*(x,y:CollectorDeviceRoute):bool =
+    true

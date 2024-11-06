@@ -18,7 +18,7 @@ type
         # Расписание сценария
         schedule:BaseSchedule
         # Устройства сбора
-        devices:seq[CollectorDevice]  
+        devices:seq[CollectorDevice]
 
 # Сценарии сбора
 var scenarios = newTable[int, CollectorScenario]()
@@ -53,11 +53,14 @@ proc getScenarioById*(id:int) : CollectorScenario =
     discard
 
 # Запускает сценарий сбора
-proc start*(this:CollectorScenario) =
-    # Получает прикладной драйвер устройства
-    # Устанавливает канал до устройства
-    # Создаёт задания по устройству
-    # Передаёт задания в прикладной драйвер
+proc start*(this:CollectorScenario) =   
+    var routes = newTable[cot.CollectorDeviceRoute, seq[cot.CollectorDevice]]()
+
+    # Группирует устройства по маршрутам
+    #this.devices
+
+    # Проверяет 
+
     discard
 
 # Останавливает сценарий

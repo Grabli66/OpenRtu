@@ -1,17 +1,17 @@
 import json
-import ./type_ids
+import ../common/type_ids as tid
 
 type
     # Маршрут для чтения
     DbRouteRead* = ref object
         id*:int
-        routeType*:RouteType
+        routeType*:tid.RouteType
         routeSettings*:JsonNode
 
     # Устройство для чтения
     DbDeviceRead* = ref object
         id*:int
-        devceType*:DeviceModelType
+        devceType*:tid.DeviceModelType
         deviceSettings*:JsonNode
         routes*:seq[DbRouteRead]
 
@@ -19,6 +19,6 @@ type
     DbCollectorScenarioRead* = ref object
         id*:int
         name*:string
-        scheduleType*:ScheduleType
+        scheduleType*:tid.ScheduleType
         scheduleSettings*:JsonNode
         devices*:seq[DbDeviceRead]

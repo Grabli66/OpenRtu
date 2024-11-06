@@ -1,7 +1,7 @@
 import json
 import options
 import idatabase
-import ./type_ids as tid
+import ../common/type_ids as tid
 import ./db_entities as dbe
 
 # Возвращает все сценарии сбора
