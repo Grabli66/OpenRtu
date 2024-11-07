@@ -5,9 +5,8 @@
 import asyncdispatch
 import tables
 
-import print
-
-import collector_types as cot
+import ./types/collector_device as cod
+import ./types/collector_task as cot
 import ../common/schedule
 
 type
@@ -18,7 +17,7 @@ type
         # Расписание сценария
         schedule:BaseSchedule
         # Устройства сбора
-        devices:seq[CollectorDevice]
+        devices:seq[cod.CollectorDevice]
 
 # Сценарии сбора
 var scenarios = newTable[int, CollectorScenario]()
@@ -39,7 +38,7 @@ proc addCollectorScenario*(
             # Расписание сценария
             schedule:BaseSchedule,
             # Опрашиваемые устройства 
-            devices:seq[cot.CollectorDevice]) : CollectorScenario =    
+            devices:seq[cod.CollectorDevice]) : CollectorScenario =    
     let scenario = CollectorScenario(
         id:id,
         schedule:schedule,
@@ -54,7 +53,7 @@ proc getScenarioById*(id:int) : CollectorScenario =
 
 # Запускает сценарий сбора
 proc start*(this:CollectorScenario) =   
-    var routes = newTable[cot.CollectorDeviceRoute, seq[cot.CollectorDevice]]()
+    var routes = newTable[cod.CollectorDeviceRoute, seq[cod.CollectorDevice]]()
 
     # Группирует устройства по маршрутам
     #this.devices

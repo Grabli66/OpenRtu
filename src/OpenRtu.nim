@@ -15,7 +15,7 @@ import database/idatabase as dbi
 import database/database_factory as dbf
 import database/db_entities as dbe
 import collector/collector as col
-import collector/collector_types as cot
+import collector/types/collector_device as cod
 import common/daytime as dyt
 import common/discret as dis
 import common/schedule as sch
@@ -32,7 +32,7 @@ proc main() =
                 dis.newHourDiscret(),
                 dyt.newZeroDayTime()
             ),
-            dbScenario.devices.mapIt(cot.newCollectorDevice(
+            dbScenario.devices.mapIt(cod.newCollectorDevice(
                 it.id,
                 it.devceType,
                 it.deviceSettings
