@@ -1,22 +1,14 @@
 # Общие типы относящиеся к автосбору
 # Для передачи между модулями
 
+import asyncdispatch
 import json
 import std/hashes
 
 import ../common/type_ids as tid
 import ../common/interval
 
-type
-    # Интерфейс транспортного драйвера
-    ITransportDriver* = ref object       
-
-    # Интерфейс драйвера протокола
-    IProtocolDriver* = ref object
-
-    # Интерфейс прикладного драйвера
-    IAppLayerDriver* = ref object
-
+type    
     # Типы задания собирателя
     TaskKind* {.pure.} = enum
         # Запрос измеренных данных устройства
@@ -55,6 +47,27 @@ type
         of EventRequest:
             # Запрашиваемый интервал событий
             eventInterval:Interval
+
+    # Канал транспортировки данных
+    ITransportChannel* = ref object
+        # Обратный вызов при получении ответа
+        onResponse*:proc(packet:seq[uint8]):void
+        # Обратный вызов при возникновении ошибки в канале
+        onFail*:proc():void
+        # Отправляет пакет
+        send:proc(packet:openArray[uint8]):void
+
+    # Интерфейс транспортного драйвера
+    ITransportDriver* = ref object
+        # Возвращает future которая вернёт или канал
+        # Или ошибку получения канала
+        getChannel:proc(route:CollectorDeviceRoute):Future[ITransportChannel]
+
+    # Интерфейс драйвера протокола
+    IProtocolDriver* = ref object
+
+    # Интерфейс прикладного драйвера
+    IAppLayerDriver* = ref object
 
 # Создаёт задачу собирателя для сбора данных измерения
 proc newDataRequestCollectorTask*(
