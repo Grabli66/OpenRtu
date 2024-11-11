@@ -9,8 +9,6 @@
 
 import sequtils
 
-import print
-
 import database/idatabase as dbi
 import database/database_factory as dbf
 import database/db_entities as dbe
@@ -19,12 +17,6 @@ import collector/types/collector_device as cod
 import common/daytime as dyt
 import common/discret as dis
 import common/schedule as sch
-import common/ikey
-import tables
-
-type
-    Person = object
-        id:int
 
 proc main() =
     # Инициализирует базу данных    
@@ -41,7 +33,8 @@ proc main() =
             dbScenario.devices.mapIt(cod.newCollectorDevice(
                 it.id,
                 it.devceType,
-                it.deviceSettings
+                it.deviceSettings,
+                @[]
             ))
         )
         scenario.start()

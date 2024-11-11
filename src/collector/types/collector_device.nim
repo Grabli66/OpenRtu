@@ -7,7 +7,7 @@ type
     # Маршрут устройства
     CollectorDeviceRoute* = ref object
         # Тип маршрута
-        routeType:int
+        routeType:tid.RouteType
         # Настройки маршрута
         routeSettings:JsonNode
 
@@ -23,9 +23,19 @@ type
         routes:seq[CollectorDeviceRoute]
 
 # Создаёт новое устройство сбора
-proc newCollectorDevice*(id:int, deviceType:DeviceModelType, settings:JsonNode) : CollectorDevice =
+proc newCollectorDevice*(
+        id:int, deviceType:DeviceModelType, settings:JsonNode, routes:seq[CollectorDeviceRoute]) : CollectorDevice =
     return CollectorDevice(
         id: id,
         deviceType: deviceType,
-        settings: settings
+        settings: settings,
+        routes:routes
     )
+
+# Возвращает тип маршрута
+proc routeType*(this:CollectorDeviceRoute):tid.RouteType =
+    return this.routeType
+
+# Возвращает маршруты по устройству
+proc routes*(this:CollectorDevice):seq[CollectorDeviceRoute] =
+    return this.routes

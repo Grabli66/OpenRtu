@@ -5,10 +5,11 @@
 import asyncdispatch
 import tables
 
-import ./types/collector_device as cod
-import ./types/collector_task as cot
 import ../common/schedule
 import ../common/ikey
+import ./types/collector_device as cod
+import ./types/collector_task as cot
+import ./driver_factory as drf
 
 type
     # Сценарий сбора
@@ -58,7 +59,8 @@ proc start*(this:CollectorScenario) =
 
     # Группирует устройства по маршрутам
     for device in this.devices:
-        discard
+        for route in device.routes:
+            let transportDriver = drf.getTransportDriver(route.routeType)
 
 # Останавливает сценарий
 proc stop*(this:CollectorScenario) =

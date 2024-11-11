@@ -1,6 +1,6 @@
-import ../../collector_types as cot
+import ../../types/itransport_driver as itd
 
 # Создаёт новый драйвер
-proc newDriver*():cot.ITransportDriver =
-    return cot.ITransportDriver(
+proc newDriver*():itd.ITransportDriver =
+    return itd.ITransportDriver(
     )

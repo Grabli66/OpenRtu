@@ -1,6 +1,7 @@
 import asyncdispatch
 
 import ../../common/ikey
+import ./collector_device as cod
 
 type
     # Канал транспортировки данных
@@ -16,7 +17,7 @@ type
     ITransportDriver* = ref object
         # Возвращает future которая вернёт канал посли установки связи
         # Или ошибку получения канала
-        openChannel:proc(route:CollectorDeviceRoute):Future[ITransportChannel]
+        openChannel:proc(route:cod.CollectorDeviceRoute):Future[ITransportChannel]
         # Возвращает ключ для сравнения маршрута
         getKey:proc(route:CollectorDeviceRoute):IKey[CollectorDeviceRoute]
 
