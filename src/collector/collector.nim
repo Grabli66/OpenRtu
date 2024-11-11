@@ -8,6 +8,7 @@ import tables
 import ./types/collector_device as cod
 import ./types/collector_task as cot
 import ../common/schedule
+import ../common/ikey
 
 type
     # Сценарий сбора
@@ -53,14 +54,11 @@ proc getScenarioById*(id:int) : CollectorScenario =
 
 # Запускает сценарий сбора
 proc start*(this:CollectorScenario) =   
-    var routes = newTable[cod.CollectorDeviceRoute, seq[cod.CollectorDevice]]()
+    var routes = newTable[IKey[cod.CollectorDeviceRoute], seq[cod.CollectorDevice]]()
 
     # Группирует устройства по маршрутам
-    #this.devices
-
-    # Проверяет 
-
-    discard
+    for device in this.devices:
+        discard
 
 # Останавливает сценарий
 proc stop*(this:CollectorScenario) =

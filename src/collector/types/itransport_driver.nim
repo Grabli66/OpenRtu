@@ -1,5 +1,7 @@
 import asyncdispatch
 
+import ../../common/ikey
+
 type
     # Канал транспортировки данных
     ITransportChannel* = ref object
@@ -12,11 +14,22 @@ type
     
      # Интерфейс транспортного драйвера
     ITransportDriver* = ref object
-        # Возвращает future которая вернёт или канал
+        # Возвращает future которая вернёт канал посли установки связи
         # Или ошибку получения канала
-        getChannel:proc(route:CollectorDeviceRoute):Future[ITransportChannel]
+        openChannel:proc(route:CollectorDeviceRoute):Future[ITransportChannel]
+        # Возвращает ключ для сравнения маршрута
+        getKey:proc(route:CollectorDeviceRoute):IKey[CollectorDeviceRoute]
 
 # Отправляет пакет
-template send*(this:ITransportChannel,packet:openArray[uint8]):void =
+proc send*(this:ITransportChannel,packet:openArray[uint8]):void =
     this.send(packet)
+
+# Перенаправляет в интерфейс
+proc openChannel*(
+        this:ITransportDriver, route:CollectorDeviceRoute):Future[ITransportChannel] =
+    return this.openChannel(route)
+
+proc isRouteEqual*(
+        this:ITransportDriver, first:CollectorDeviceRoute, second:CollectorDeviceRoute):bool =
+    return this.isRouteEqual(first, second)
     

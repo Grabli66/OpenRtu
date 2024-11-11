@@ -19,6 +19,12 @@ import collector/types/collector_device as cod
 import common/daytime as dyt
 import common/discret as dis
 import common/schedule as sch
+import common/ikey
+import tables
+
+type
+    Person = object
+        id:int
 
 proc main() =
     # Инициализирует базу данных    
@@ -39,7 +45,6 @@ proc main() =
             ))
         )
         scenario.start()
-
 
 when isMainModule:
     main()
