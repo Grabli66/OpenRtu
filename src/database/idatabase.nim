@@ -2,7 +2,7 @@ import db_entities as dbe
 
 type
     # Интерфейс базы данных 
-    IDatabase* = ref object        
+    IDatabase* = object        
         # Возвращает все сценарии сбора
         getCollectorScenarios:proc():seq[dbe.DbCollectorScenarioRead]
 
