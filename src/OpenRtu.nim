@@ -8,6 +8,7 @@
 
 
 import sequtils
+import std/sugar
 
 import database/idatabase as dbi
 import database/database_factory as dbf
@@ -34,7 +35,9 @@ proc main() =
                 it.id,
                 it.devceType,
                 it.deviceSettings,
-                @[]
+                it.routes.mapIt(
+                    cod.newCollectorDeviceRoute(it.routeType, it.routeSettings)
+                )
             ))
         )
         scenario.start()

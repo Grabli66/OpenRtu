@@ -4,7 +4,6 @@ import options
 import tables
 
 import ../common/type_ids as tid
-import ../common/ikey as ike
 import ./types/itransport_driver as itd
 import ./types/iprotocol_driver as ipd
 import ./types/iapplayer_driver as iad
@@ -17,8 +16,6 @@ proc getTransportDriver*(routeType:RouteType) : Option[ITransportDriver] =
     if transportDrivers.hasKey(routeType):
         return transportDrivers[routeType]
     
-
-
     let driver = case routeType
     of tid.RouteType.TcpClient:
         some(tcd.newDriver())

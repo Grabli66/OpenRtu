@@ -17,6 +17,10 @@ proc newIKey*[T](
         equals:equals
     )
 
+# Возвращает объект для которого создан ключ
+proc obj*[T](this:IKey[T]):T =
+    return this.obj
+
 # Считает хэш
 proc hash*[T](this:IKey[T]):int =    
     return this.hash(this.obj)

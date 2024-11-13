@@ -1,13 +1,13 @@
 import json
 
 
-import ../../common/type_ids as tid
+import ../../common/type_ids
 
 type       
     # Маршрут устройства
     CollectorDeviceRoute* = ref object
         # Тип маршрута
-        routeType:tid.RouteType
+        routeType:RouteType
         # Настройки маршрута
         routeSettings:JsonNode
 
@@ -16,7 +16,7 @@ type
         # Идентификатор устройства
         id:int
         # Идентификатор устройства
-        deviceType:tid.DeviceModelType
+        deviceType:DeviceModelType
         # Настройки устройства
         settings:JsonNode
         # Маршруты устройства
@@ -32,8 +32,15 @@ proc newCollectorDevice*(
         routes:routes
     )
 
+# Создаёт новый маршрут
+proc newCollectorDeviceRoute*(routeType:RouteType, routeSettings:JsonNode):CollectorDeviceRoute =
+    return CollectorDeviceRoute(
+        routeType:routeType,
+        routeSettings:routeSettings
+    )
+
 # Возвращает тип маршрута
-proc routeType*(this:CollectorDeviceRoute):tid.RouteType =
+proc routeType*(this:CollectorDeviceRoute):RouteType =
     return this.routeType
 
 # Возвращает маршруты по устройству
