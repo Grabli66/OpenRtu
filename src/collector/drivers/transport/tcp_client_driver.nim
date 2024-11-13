@@ -6,8 +6,11 @@ import ../../../common/ikey as ike
 proc getKey(route:CollectorDeviceRoute):IKey[CollectorDeviceRoute] =
     return newIKey[CollectorDeviceRoute](
         obj = route,
-        hash = nil,
-        equals = nil
+        hash = proc(x:CollectorDeviceRoute):int =
+            return 1
+        ,
+        equals = proc(x,y:CollectorDeviceRoute):bool =
+            return true
     )
 
 # Создаёт новый драйвер

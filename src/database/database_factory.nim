@@ -7,8 +7,8 @@ var database : IDatabase
 
 # Возвращает интерфейс базы данных
 proc get*() : IDatabase =
-    if database != nil:
-        return database
+    # if database != nil:
+    #     return database
 
     database = ddb.newDatabase()
     return database
