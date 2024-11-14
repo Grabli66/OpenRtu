@@ -22,3 +22,15 @@ type
     ScheduleType* {.pure.} = enum
         # Периодически запускаемое расписание
         Periodic = 0
+
+    # Тип измерения
+    MeasureType* {.pure.} = enum
+        # Активная энергия
+        ActiveEnergy = 0
+
+    # Направление перетока
+    FlowDirection* {.pure.} = enum
+        # Прямое
+        Forward = 0
+        # Обратное
+        Backward = 1

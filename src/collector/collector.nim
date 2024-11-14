@@ -9,26 +9,32 @@ import options
 import print
 
 import ../common/schedule
+import ../common/interval
 import ../common/ikey
-import ./types/collector_device as cod
+import ./types/collector_device
+import ./types/collector_parameter
 import ./types/collector_task as cot
 import ./types/itransport_driver as itd
 import ./driver_factory as drf
 
 type
     # Транспортный драйвер с устройствами которые будут через него опрашиваться
-    TransportWithDevices = ref object
+    TransportWithDevices = object
         # Транспортный драйвер
         driver:ITransportDriver
         # Устройства
         devices:seq[CollectorDevice]
 
     # Сценарий сбора
-    CollectorScenario* = ref object
+    CollectorScenario* = object
         # Идентификатор сценария
         id:int
         # Расписание сценария
         schedule:BaseSchedule
+        # Глубина сбора в днях
+        deepDay:int
+        # Параметры измерения
+        measureParameters:seq[CollectorParameter]
         # Устройства сбора
         devices:seq[CollectorDevice]
 
@@ -39,7 +45,7 @@ var scenarios = newTable[int, CollectorScenario]()
 var collectorTaskId = 0
 
 # Возвращает следующий идентификатор задания собирателя
-template nextTaskId*(): int =
+template nextTaskId(): int =
     collectorTaskId += 1
     collectorTaskId
 
@@ -51,7 +57,7 @@ proc addCollectorScenario*(
             # Расписание сценария
             schedule:BaseSchedule,
             # Опрашиваемые устройства 
-            devices:seq[cod.CollectorDevice]) : CollectorScenario =    
+            devices:seq[CollectorDevice]) : CollectorScenario =    
     let scenario = CollectorScenario(
         id:id,
         schedule:schedule,
@@ -85,6 +91,16 @@ proc start*(this:CollectorScenario) =
                 transDevice.devices.add(device)
                 deviceByRoute[key] = transDevice
     
+    # Создаёт задания
+    var tasks = newSeq[CollectorTask]()
+    for param in this.measureParameters:
+        let taskId = nextTaskId()
+        let task = cot.newDataRequestCollectorTask(taskId, param, none(Interval))
+        tasks.add(task)
+
+    # Создаёт цепочку: прикладной + канальный + канал
+
+    # Открывает каналы
     for key, transDevice in deviceByRoute:
         let channel = transDevice.driver.openChannel(key.obj).waitFor
 
@@ -111,9 +127,4 @@ proc updateDevice*(this:CollectorScenario, device:CollectorDevice) =
 
 # Удавляет устройство по идентификатору
 proc removeDeviceById*(this:CollectorScenario, id:int) =
-    discard
-
-# Запускает внешнее задания
-# Возвращает результат выолнения задания
-proc executeExternalTask*(task:cot.CollectorTask) : Future[void] =
     discard

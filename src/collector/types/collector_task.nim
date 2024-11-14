@@ -1,3 +1,6 @@
+import options
+
+import ./collector_parameter
 import ../../common/interval
 
 type
@@ -15,9 +18,9 @@ type
         case kind : TaskKind
         of DataRequest:
             # Параметр измерения
-            parameter:int
-            # Запрашиваемый интервал данных
-            dataInterval:Interval
+            parameter:CollectorParameter
+            # Запрашиваемый интервал данных, может отсутствовать
+            dataInterval:Option[Interval]
         of EventRequest:
             # Запрашиваемый интервал событий
             eventInterval:Interval   
@@ -25,8 +28,8 @@ type
 # Создаёт задачу собирателя для сбора данных измерения
 proc newDataRequestCollectorTask*(
         id:int,
-        parameter:int,
-        dataInterval:Interval
+        parameter:CollectorParameter,
+        dataInterval:Option[Interval]
         ) : CollectorTask =
     return CollectorTask(
         id:id,
@@ -36,9 +39,9 @@ proc newDataRequestCollectorTask*(
     )
 
 # Возвращает идентификатор задания
-template id*(this:CollectorTask) : int =
-    this.id
+proc id*(this:CollectorTask) : int =
+    return this.id
 
 # Возвращает тип задания
-template kind*(this:CollectorTask) : TaskKind =
-    this.kind
+proc kind*(this:CollectorTask) : TaskKind =
+    return this.kind
