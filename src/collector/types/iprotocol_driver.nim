@@ -1,3 +1,3 @@
 type
     # Интерфейс драйвера протокола
-    IProtocolDriver* = ref object
+    IProtocolDriver* = object

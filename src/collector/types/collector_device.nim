@@ -5,18 +5,20 @@ import ../../common/type_ids
 
 type       
     # Маршрут устройства
-    CollectorDeviceRoute* = ref object
+    CollectorDeviceRoute* = object
         # Тип маршрута
         routeType:RouteType
         # Настройки маршрута
         routeSettings:JsonNode
 
     # Данные по устройству сбора
-    CollectorDevice* = ref object
+    CollectorDevice* = object
         # Идентификатор устройства
         id:int
         # Идентификатор устройства
         deviceType:DeviceModelType
+        # Тип протокола
+        protocolType:ProtocolType
         # Настройки устройства
         settings:JsonNode
         # Маршруты устройства

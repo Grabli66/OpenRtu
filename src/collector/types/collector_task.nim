@@ -1,5 +1,6 @@
 import options
 
+import ./collector_device
 import ./collector_parameter
 import ../../common/interval
 
@@ -12,7 +13,7 @@ type
         EventRequest = 1
 
     # Интерфейс задания собирателя
-    CollectorTask* = ref object of RootObj      
+    CollectorTask* = object of RootObj      
         # Идентификатор задания
         id: int
         case kind : TaskKind
@@ -24,6 +25,15 @@ type
         of EventRequest:
             # Запрашиваемый интервал событий
             eventInterval:Interval   
+
+    # Задания собирателя с данными по устройству с маршрутом
+    CollectorTasksWithDevice* = object
+        # Задания
+        tasks: seq[CollectorTask]
+        # Устройство
+        device: CollectorDevice
+        # Маршрут
+        route: CollectorDeviceRoute
 
 # Создаёт задачу собирателя для сбора данных измерения
 proc newDataRequestCollectorTask*(

@@ -71,7 +71,7 @@ proc getScenarioById*(id:int) : CollectorScenario =
     discard
 
 # Запускает сценарий сбора
-proc start*(this:CollectorScenario) =   
+proc start*(this:CollectorScenario) =
     var deviceByRoute = newTable[IKey[CollectorDeviceRoute], TransportWithDevices]()    
 
     # Группирует устройства по маршрутам
@@ -97,12 +97,14 @@ proc start*(this:CollectorScenario) =
         let taskId = nextTaskId()
         let task = cot.newDataRequestCollectorTask(taskId, param, none(Interval))
         tasks.add(task)
-
-    # Создаёт цепочку: прикладной + канальный + канал
-
+    
     # Открывает каналы
     for key, transDevice in deviceByRoute:
+        # Создаёт цепочку: прикладной + канальный + канал
+        # TODO
+
         let channel = transDevice.driver.openChannel(key.obj).waitFor
+
 
 # Останавливает сценарий
 proc stop*(this:CollectorScenario) =
