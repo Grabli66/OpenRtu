@@ -12,6 +12,7 @@ import ../common/schedule
 import ../common/interval
 import ../common/ikey
 import ./types/collector_device
+import ./types/collector_scenario
 import ./types/collector_parameter
 import ./types/collector_task as cot
 import ./types/itransport_driver as itd
@@ -23,20 +24,7 @@ type
         # Транспортный драйвер
         driver:ITransportDriver
         # Устройства
-        devices:seq[CollectorDevice]
-
-    # Сценарий сбора
-    CollectorScenario* = object
-        # Идентификатор сценария
-        id:int
-        # Расписание сценария
-        schedule:BaseSchedule
-        # Глубина сбора в днях
-        deepDay:int
-        # Параметры измерения
-        measureParameters:seq[CollectorParameter]
-        # Устройства сбора
-        devices:seq[CollectorDevice]
+        devices:seq[CollectorDevice]    
 
 # Сценарии сбора
 var scenarios = newTable[int, CollectorScenario]()
@@ -92,18 +80,21 @@ proc start*(this:CollectorScenario) =
                 deviceByRoute[key] = transDevice
     
     # Создаёт задания
+    # TODO:  создавать задания для каждого устройства
     var tasks = newSeq[CollectorTask]()
     for param in this.measureParameters:
         let taskId = nextTaskId()
         let task = cot.newDataRequestCollectorTask(taskId, param, none(Interval))
         tasks.add(task)
     
-    # Открывает каналы
-    for key, transDevice in deviceByRoute:
-        # Создаёт цепочку: прикладной + канальный + канал
-        # TODO
+    # Создаёт цепочку: прикладной + канальный + канал
+    for key, transDevice in deviceByRoute:        
+        # TODO: создавать цепочку обработки задания
 
+        # TODO: открывать канал
         let channel = transDevice.driver.openChannel(key.obj).waitFor
+        driveChain.processTasks(tasks, protocolChannel, context)
+
 
 
 # Останавливает сценарий
