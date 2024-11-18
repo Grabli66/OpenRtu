@@ -1,4 +1,4 @@
-import ../../common/schedule
+import ../../common/ischedule
 import ./collector_parameter
 import ./collector_device
 
@@ -8,7 +8,7 @@ type
         # Идентификатор сценария
         id:int
         # Расписание сценария
-        schedule:BaseSchedule
+        schedule:ISchedule
         # Глубина сбора в днях
         deepDay:int
         # Параметры измерения
@@ -18,7 +18,7 @@ type
 
 # Создаёт новый сценарий сбора
 proc newCollectorScenario*(
-    id:int, schedule:BaseSchedule,
+    id:int, schedule:ISchedule,
     deepDay:int, measureParameters:seq[CollectorParameter],
     devices:seq[CollectorDevice]):CollectorScenario =
     return CollectorScenario(
@@ -32,3 +32,6 @@ proc newCollectorScenario*(
 # Возвращает идентификатор сценария
 proc id*(this:CollectorScenario):int =
     return this.id
+
+proc schedule*():ISchedule =
+    discard
