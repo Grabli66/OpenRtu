@@ -9,4 +9,5 @@ type
             # Задания для сбора
             tasks:seq[CollectorTasksWithDevice], 
             # Канал: протокол + транспорт
-            channel:IProtocolChannel):void
+            #channel:IProtocolChannel
+            ):void

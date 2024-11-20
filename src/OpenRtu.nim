@@ -15,31 +15,35 @@ import database/database_factory as dbf
 import database/db_entities as dbe
 import collector/collector as col
 import collector/types/collector_device as cod
+import collector/types/collector_scenario as cos
 import common/daytime as dyt
 import common/discret as dis
-import common/schedule as sch
+import common/ischedule as sch
 
 proc main() =
     # Инициализирует базу данных    
     let db = dbf.get()
     # Загружает сценарии сбора    
     let dbScenarios = db.getCollectorScenarios()    
-    for dbScenario in dbScenarios:               
-        let scenario = col.addCollectorScenario(
-            dbScenario.id,
-            sch.newPeriodicSchedule(
+    for dbScenario in dbScenarios:  
+        let deepDay = 3
+
+        let schedule = sch.newPeriodicSchedule(
                 dis.newHourDiscret(),
                 dyt.newZeroDayTime()
-            ),
-            dbScenario.devices.mapIt(cod.newCollectorDevice(
+        )
+
+        let devices = dbScenario.devices.mapIt(cod.newCollectorDevice(
                 it.id,
                 it.devceType,
                 it.deviceSettings,
                 it.routes.mapIt(
                     cod.newCollectorDeviceRoute(it.routeType, it.routeSettings)
                 )
-            ))
-        )
+        ))
+
+        let scenario = cos.newCollectorScenario(
+            dbScenario.id, schedule, deepDay, @[], devices)
         scenario.start()
 
 when isMainModule:

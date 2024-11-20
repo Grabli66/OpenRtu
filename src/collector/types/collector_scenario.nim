@@ -18,9 +18,9 @@ type
 
 # Создаёт новый сценарий сбора
 proc newCollectorScenario*(
-    id:int, schedule:ISchedule,
-    deepDay:int, measureParameters:seq[CollectorParameter],
-    devices:seq[CollectorDevice]):CollectorScenario =
+        id:int, schedule:ISchedule,
+        deepDay:int, measureParameters:seq[CollectorParameter],
+        devices:seq[CollectorDevice]):CollectorScenario =
     return CollectorScenario(
         id:id,
         schedule:schedule,
@@ -29,9 +29,22 @@ proc newCollectorScenario*(
         devices:devices
     )
 
-# Возвращает идентификатор сценария
+# Возвращает id
 proc id*(this:CollectorScenario):int =
     return this.id
 
-proc schedule*():ISchedule =
-    discard
+# Возвращает schedule
+proc schedule*(this:CollectorScenario):ISchedule =
+    return this.schedule
+
+# Возвращает deepDay
+proc deepDay*(this:CollectorScenario):int =
+    return this.deepDay
+
+# Возвращает measureParameters
+proc measureParameters*(this:CollectorScenario):seq[CollectorParameter] =
+    return this.measureParameters
+
+# Возвращает devices
+proc devices*(this:CollectorScenario):seq[CollectorDevice] =
+    return this.devices

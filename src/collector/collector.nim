@@ -8,7 +8,7 @@ import options
 
 import print
 
-import ../common/schedule
+import ../common/ischedule
 import ../common/interval
 import ../common/ikey
 import ./types/collector_device
@@ -24,10 +24,13 @@ type
         # Транспортный драйвер
         driver:ITransportDriver
         # Устройства
-        devices:seq[CollectorDevice]    
+        devices:seq[CollectorDevice]
+
+    # Сценарий сбора 
+    ScenarioInternal = object    
 
 # Сценарии сбора
-var scenarios = newTable[int, CollectorScenario]()
+var scenarios = newTable[int, Option[CollectorScenario]]()
 
 # Идентификатор задания
 var collectorTaskId = 0
@@ -39,24 +42,12 @@ template nextTaskId(): int =
 
 # Создаёт и добавляет сценарий сбора в словарь сценариев
 # Возвращает созданный сценарий
-proc addCollectorScenario*(
-            # Идентификатор сценария
-            id:int,
-            # Расписание сценария
-            schedule:BaseSchedule,
-            # Опрашиваемые устройства 
-            devices:seq[CollectorDevice]) : CollectorScenario =    
-    let scenario = CollectorScenario(
-        id:id,
-        schedule:schedule,
-        devices:devices
-    )    
-    scenarios[scenario.id] = scenario
-    return scenario
+proc addCollectorScenario*(scenario:CollectorScenario) =        
+    scenarios[scenario.id] = some(scenario)
 
 # Возвращает сценарий сбора по идентификатору
-proc getScenarioById*(id:int) : CollectorScenario =
-    discard
+proc getScenarioById*(id:int) : Option[CollectorScenario] =
+    return scenarios.getOrDefault(id, none(CollectorScenario))
 
 # Запускает сценарий сбора
 proc start*(this:CollectorScenario) =
@@ -93,7 +84,7 @@ proc start*(this:CollectorScenario) =
 
         # TODO: открывать канал
         let channel = transDevice.driver.openChannel(key.obj).waitFor
-        driveChain.processTasks(tasks, protocolChannel, context)
+        #driveChain.processTasks(tasks, protocolChannel, context)
 
 
 
