@@ -10,12 +10,10 @@ type
         # Запрос измеренных данных устройства
         DataRequest = 0, 
         # Запрос событий устройства
-        EventRequest = 1
+        EventRequest = 1    
 
     # Интерфейс задания собирателя
-    CollectorTask* = object of RootObj      
-        # Идентификатор задания
-        id: int
+    CollectorTaskData* = object        
         case kind : TaskKind
         of DataRequest:
             # Параметр измерения
@@ -24,7 +22,13 @@ type
             dataInterval:Option[Interval]
         of EventRequest:
             # Запрашиваемый интервал событий
-            eventInterval:Interval   
+            eventInterval:Interval       
+
+    CollectorTask* = object
+        # Идентификатор задания
+        id:int
+        # Информация по заданию 
+        data:CollectorTaskData
 
     # Задания собирателя с данными по устройству с маршрутом
     CollectorTasksWithDevice* = object
@@ -36,16 +40,14 @@ type
         route: CollectorDeviceRoute
 
 # Создаёт задачу собирателя для сбора данных измерения
-proc newDataRequestCollectorTask*(
-        id:int,
+proc newDataRequestCollectorDataTask*(
         parameter:CollectorParameter,
         dataInterval:Option[Interval]
-        ) : CollectorTask =
-    return CollectorTask(
-        id:id,
-        kind:TaskKind.DataRequest,
-        parameter:parameter,
-        dataInterval:dataInterval
+        ) : CollectorTaskData =
+    return CollectorTaskData(        
+            kind:TaskKind.DataRequest,
+            parameter:parameter,
+            dataInterval:dataInterval        
     )
 
 # Возвращает идентификатор задания

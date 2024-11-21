@@ -70,17 +70,17 @@ proc start*(this:CollectorScenario) =
                 transDevice.devices.add(device)
                 deviceByRoute[key] = transDevice
     
-    # Создаёт задания
-    # TODO:  создавать задания для каждого устройства
-    var tasks = newSeq[CollectorTask]()
+    # Создаёт информацию о заданиях
+    var tasksData = newSeq[CollectorTaskData]()
     for param in this.measureParameters:
-        let taskId = nextTaskId()
-        let task = cot.newDataRequestCollectorTask(taskId, param, none(Interval))
-        tasks.add(task)
+        let task = cot.newDataRequestCollectorDataTask(param, none(Interval))
+        tasksData.add(task)
     
     # Создаёт цепочку: прикладной + канальный + канал
     for key, transDevice in deviceByRoute:        
         # TODO: создавать цепочку обработки задания
+
+        # TODO: создавать конечные задания
 
         # TODO: открывать канал
         let channel = transDevice.driver.openChannel(key.obj).waitFor
