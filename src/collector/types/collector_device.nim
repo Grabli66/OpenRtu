@@ -41,6 +41,14 @@ proc newCollectorDeviceRoute*(routeType:RouteType, routeSettings:JsonNode):Colle
         routeSettings:routeSettings
     )
 
+# Возвращает тип устройства
+proc deviceType*(this:CollectorDevice):DeviceModelType =
+    return this.deviceType
+
+# Возвращает протокол устройства
+proc protocolType*(this:CollectorDevice):ProtocolType =
+    return this.protocolType
+
 # Возвращает тип маршрута
 proc routeType*(this:CollectorDeviceRoute):RouteType =
     return this.routeType

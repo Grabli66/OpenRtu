@@ -26,7 +26,7 @@ type
 
     CollectorTask* = object
         # Идентификатор задания
-        id:int
+        id:Natural
         # Информация по заданию 
         data:CollectorTaskData
 
@@ -40,7 +40,7 @@ type
         route: CollectorDeviceRoute
 
 # Создаёт задачу собирателя для сбора данных измерения
-proc newDataRequestCollectorDataTask*(
+proc newCollectorDataTask*(
         parameter:CollectorParameter,
         dataInterval:Option[Interval]
         ) : CollectorTaskData =
@@ -48,6 +48,13 @@ proc newDataRequestCollectorDataTask*(
             kind:TaskKind.DataRequest,
             parameter:parameter,
             dataInterval:dataInterval        
+    )
+
+# Создаёт новое задание собирателя
+proc newCollectorTask*(id:Natural, data:CollectorTaskData):CollectorTask =
+    return CollectorTask(
+        id:id,
+        data:data
     )
 
 # Возвращает идентификатор задания

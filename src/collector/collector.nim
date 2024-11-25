@@ -5,6 +5,7 @@
 import asyncdispatch
 import tables
 import options
+import sequtils
 
 import print
 
@@ -16,18 +17,27 @@ import ./types/collector_scenario
 import ./types/collector_parameter
 import ./types/collector_task as cot
 import ./types/itransport_driver as itd
+import ../common/type_ids as tid
 import ./driver_factory as drf
 
 type
+    # Ключ для группировки устройств
+    DeviceChannelKey = object
+        # Модель устройства
+        deviceType:DeviceModelType
+        # Протокол устройства
+        protocolType:ProtocolType
+        # Ключ транспортного канала
+        transportKey:IKey[CollectorDeviceRoute]
+
     # Транспортный драйвер с устройствами которые будут через него опрашиваться
     TransportWithDevices = object
+        # Маршрут до устройств
+        route:CollectorDeviceRoute
         # Транспортный драйвер
         driver:ITransportDriver
         # Устройства
-        devices:seq[CollectorDevice]
-
-    # Сценарий сбора 
-    ScenarioInternal = object    
+        devices:seq[CollectorDevice] 
 
 # Сценарии сбора
 var scenarios = newTable[int, Option[CollectorScenario]]()
@@ -40,6 +50,15 @@ template nextTaskId(): int =
     collectorTaskId += 1
     collectorTaskId
 
+# Возвращает ключ по которому группируются устройство
+# Тип устройства + протокол устройства + ключ канала
+proc getDeviceChannelKey(
+            deviceType:DeviceModelType,
+            protocolType:ProtocolType,
+            transportKey:IKey[CollectorDeviceRoute]
+        ):IKey[DeviceChannelKey] =
+    discard
+
 # Создаёт и добавляет сценарий сбора в словарь сценариев
 # Возвращает созданный сценарий
 proc addCollectorScenario*(scenario:CollectorScenario) =        
@@ -51,18 +70,21 @@ proc getScenarioById*(id:int) : Option[CollectorScenario] =
 
 # Запускает сценарий сбора
 proc start*(this:CollectorScenario) =
-    var deviceByRoute = newTable[IKey[CollectorDeviceRoute], TransportWithDevices]()    
+    var deviceByRoute = newTable[IKey[DeviceChannelKey], TransportWithDevices]()    
 
     # Группирует устройства по маршрутам
     for device in this.devices:
         for route in device.routes:
             let transportDriver = drf.getTransportDriver(route.routeType)
             if transportDriver.isSome:
-                let key = transportDriver.get.getKey(route)
+                let transportKey = transportDriver.get.getKey(route)
+                let key = getDeviceChannelKey(
+                    device.deviceType, device.protocolType, transportKey)                
                 var transDevice = if deviceByRoute.hasKey(key):
                     deviceByRoute[key]
                 else:
                     TransportWithDevices(
+                       route:route,
                        driver:transportDriver.get,
                        devices: @[]
                     )
@@ -73,19 +95,19 @@ proc start*(this:CollectorScenario) =
     # Создаёт информацию о заданиях
     var tasksData = newSeq[CollectorTaskData]()
     for param in this.measureParameters:
-        let task = cot.newDataRequestCollectorDataTask(param, none(Interval))
+        let task = cot.newCollectorDataTask(param, none(Interval))
         tasksData.add(task)
     
     # Создаёт цепочку: прикладной + канальный + канал
-    for key, transDevice in deviceByRoute:        
+    for key, transDevice in deviceByRoute:
         # TODO: создавать цепочку обработки задания
-
-        # TODO: создавать конечные задания
+        
+        # Задания
+        let tasks = tasksData.mapIt(cot.newCollectorTask(nextTaskId(), it))
 
         # TODO: открывать канал
-        let channel = transDevice.driver.openChannel(key.obj).waitFor
+        let channel = transDevice.driver.openChannel(transDevice.route).waitFor
         #driveChain.processTasks(tasks, protocolChannel, context)
-
 
 
 # Останавливает сценарий
