@@ -16,6 +16,8 @@ import ./types/collector_device
 import ./types/collector_scenario
 import ./types/collector_parameter
 import ./types/collector_task as cot
+import ./types/iapplayer_driver as iad
+import ./types/iprotocol_driver as ipd
 import ./types/itransport_driver as itd
 import ../common/type_ids as tid
 import ./driver_factory as drf
@@ -39,6 +41,16 @@ type
         # Устройства
         devices:seq[CollectorDevice] 
 
+    # Цепочка драйверов:прикладной+канальный+транспорт
+    DriverChain = object
+        # Прикладной драйвер
+        applayer:IAppLayerDriver
+        # Протокольный драйвер
+        protocol:IProtocolDriver
+        # Транспортный канал
+        transport:ITransportChannel
+
+
 # Сценарии сбора
 var scenarios = newTable[int, Option[CollectorScenario]]()
 
@@ -49,6 +61,19 @@ var collectorTaskId = 0
 template nextTaskId(): int =
     collectorTaskId += 1
     collectorTaskId
+
+# Создаёт цепочку драйверов
+proc newDriverChain(
+        applayer:IAppLayerDriver,
+        protocol:IProtocolDriver,
+        transport:ITransportChannel):DriverChain =
+    discard
+
+# Обрабатывает задания собирателя
+proc processTasks(
+        this:DriverChain,
+        tasks:seq[CollectorTask]) = 
+    discard
 
 # Возвращает ключ по которому группируются устройство
 # Тип устройства + протокол устройства + ключ канала
@@ -97,18 +122,27 @@ proc start*(this:CollectorScenario) =
     for param in this.measureParameters:
         let task = cot.newCollectorDataTask(param, none(Interval))
         tasksData.add(task)
-    
-    # Создаёт цепочку: прикладной + канальный + канал
-    for key, transDevice in deviceByRoute:
-        # TODO: создавать цепочку обработки задания
         
-        # Задания
+    for key, transDevice in deviceByRoute:                       
+        # Открывает канал
+        let channel = transDevice.driver.openChannel(transDevice.route).waitFor
+
+        # Создаёт цепочку драйверов: прикладной+канальный+транспорт
+        let deviceKey = key.obj
+        let applayer = drf.getAppLayerDriver(deviceKey.deviceType)
+        let protocol = drf.getProtocolDriver(deviceKey.protocolType)
+
+        let driverChain = newDriverChain(
+            applayer = applayer,
+            protocol = protocol,
+            transport = channel
+        )
+
+        # Создаёт задания для выполнения
         let tasks = tasksData.mapIt(cot.newCollectorTask(nextTaskId(), it))
 
-        # TODO: открывать канал
-        let channel = transDevice.driver.openChannel(transDevice.route).waitFor
-        #driveChain.processTasks(tasks, protocolChannel, context)
-
+        # Обрабатывает задания
+        driverChain.processTasks(tasks)
 
 # Останавливает сценарий
 proc stop*(this:CollectorScenario) =
