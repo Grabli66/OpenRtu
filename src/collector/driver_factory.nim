@@ -26,10 +26,10 @@ proc getTransportDriver*(routeType:RouteType) : Option[ITransportDriver] =
 
     return driver
 
-# Возвращает драйвер канального протокола
-proc getProtocolDriver*(protocolType:tid.ProtocolType) : ipd.IProtocolDriver =
+# Возвращает драйвер канального протокола типа протокола
+proc getProtocolDriver*(protocolType:ProtocolType) : IProtocolDriver =
     discard
 
 # Возвращает прикладной драйвер обрабатывающего задания автосбора
-proc getAppLayerDriver*(deviceType:DeviceModelType) : iad.IAppLayerDriver =
+proc getAppLayerDriver*(deviceType:DeviceModelType) : IAppLayerDriver =
     discard

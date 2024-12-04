@@ -15,13 +15,14 @@ proc getCollectorScenarios():seq[dbe.DbCollectorScenarioRead] =
             devices: @[
                 dbe.DbDeviceRead(
                     id: 1,
-                    devceType:tid.DeviceModelType.UniversalSpodes,
+                    devceType:DeviceModelType.UniversalSpodes,
+                    protocolType:ProtocolType.Spodes,
                     deviceSettings: %* { "address": 45 },
                     routes: @[
                         dbe.DbRouteRead(
                             id:1,
                             routeType:tid.RouteType.TcpClient,
-                            routeSettings: %* { "host":"localhost", "port":26701 }
+                            #routeSettings: %* { "host":"localhost", "port":26701 }
                         )
                     ]
                 ),
@@ -33,7 +34,7 @@ proc getCollectorScenarios():seq[dbe.DbCollectorScenarioRead] =
                         dbe.DbRouteRead(
                             id:2,
                             routeType:tid.RouteType.TcpClient,
-                            routeSettings: %* { "host":"localhost", "port":26701 }
+                            #routeSettings: %* { "host":"localhost", "port":26701 }
                         )
                     ]
                 ),
@@ -45,7 +46,7 @@ proc getCollectorScenarios():seq[dbe.DbCollectorScenarioRead] =
                         dbe.DbRouteRead(
                             id:3,
                             routeType:tid.RouteType.TcpClient,
-                            routeSettings: %* { "host":"localhost", "port":26701 }
+                            #routeSettings: %* { "host":"localhost", "port":26701 }
                         )
                     ]
                 )

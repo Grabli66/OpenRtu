@@ -72,7 +72,7 @@ proc newDriverChain(
 # Обрабатывает задания собирателя
 proc processTasks(
         this:DriverChain,
-        tasks:seq[CollectorTask]) = 
+        tasks:seq[CollectorTask]) =
     discard
 
 # Возвращает ключ по которому группируются устройство

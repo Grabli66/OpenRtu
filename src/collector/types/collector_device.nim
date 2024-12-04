@@ -2,6 +2,7 @@ import json
 
 
 import ../../common/type_ids
+import ../../database/db_entities as dbe
 
 type       
     # Маршрут устройства
@@ -9,7 +10,7 @@ type
         # Тип маршрута
         routeType:RouteType
         # Настройки маршрута
-        routeSettings:JsonNode
+        routeSettings:DbBaseRouteSettingsRead
 
     # Данные по устройству сбора
     CollectorDevice* = object
@@ -35,7 +36,7 @@ proc newCollectorDevice*(
     )
 
 # Создаёт новый маршрут
-proc newCollectorDeviceRoute*(routeType:RouteType, routeSettings:JsonNode):CollectorDeviceRoute =
+proc newCollectorDeviceRoute*(routeType:RouteType, routeSettings:DbBaseRouteSettingsRead):CollectorDeviceRoute =
     return CollectorDeviceRoute(
         routeType:routeType,
         routeSettings:routeSettings
